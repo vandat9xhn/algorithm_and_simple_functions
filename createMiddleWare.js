@@ -37,5 +37,5 @@ window.createMiddleWare = (
     i += 1;
   }
 
-  store.dispatch(new_action);
+  is_next && store.dispatch(new_action);
 };

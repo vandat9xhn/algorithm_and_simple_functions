@@ -1,38 +1,76 @@
 window.matrixRotation = function (
-    matrix = [
-        [1, 2, 3, 4],
-        [5, 6, 7, 8],
-        [9, 10, 11, 12],
-        [13, 14, 15, 16],
-    ],
-    r = 2
+  matrix = [
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9, 10, 11, 12],
+    [13, 14, 15, 16],
+  ],
+  r = 2
 ) {
-    const rows = matrix.length;
-    const cols = matrix[0].length;
+  const count_row = matrix.length;
 
-    const getArr = (index = 0) => {
-        const arr = []
+  const rotateRectangle = (size = 2, i = 2, degree = 90) => {
+    const arr_reg_num = [];
+    const xy_max = i + size - 1;
 
-        for(let i = index; i < rows - index; i ++){
-            
-        }
-
-        return arr
+    //
+    for (let y = i; y < xy_max; y++) {
+      arr_reg_num.push(matrix[i][y]);
     }
 
-    const rotatePoints = (arr = [1, 2], x_count = 3, y_count = 3) => {
-        const count_point = (x_count + y_count) * 2 - 4;
+    for (let x = i; x < xy_max; x++) {
+      arr_reg_num.push(matrix[x][xy_max]);
+    }
 
-        if (count_point === 0) {
-            return arr;
-        }
+    for (let y = xy_max; y > i; y--) {
+      arr_reg_num.push(matrix[xy_max][y]);
+    }
 
-        const _r = r % count_point;
+    for (let x = xy_max; x > i; x--) {
+      arr_reg_num.push(matrix[x][i]);
+    }
 
-        if (_r === 0) {
-            return arr;
-        }
+    //
+    const new_i_origin = (size - 1) * 3;
+    const count_reg_num = arr_reg_num.length;
+    let i_reg_num = new_i_origin;
 
-        return [...arr.slice(_r), ...arr.slice(0, _r)];
+    const getNextIRegNum = (y = 0, x = 0) => {
+      matrix[x][y] = arr_reg_num[i_reg_num];
+
+      i_reg_num += 1;
+      if (i_reg_num > count_reg_num - 1) {
+        i_reg_num = 0;
+      }
     };
+
+    //
+    for (let y = i; y < xy_max; y++) {
+      getNextIRegNum(y, i);
+    }
+
+    for (let x = i; x < xy_max; x++) {
+      getNextIRegNum(xy_max, x);
+    }
+
+    for (let y = xy_max; y > i; y--) {
+      getNextIRegNum(y, xy_max);
+    }
+
+    for (let x = xy_max; x > i; x--) {
+      getNextIRegNum(i, x);
+    }
+  };
+
+  const size_start = count_row % 2 === 0 ? 2 : 3;
+  let i_size = size_start;
+
+  while (i_size <= count_row) {
+    rotateRectangle(i_size, (count_row - i_size) / 2);
+    i_size += 2;
+  }
+
+  // console.log(matrix);
+
+  return matrix
 };
